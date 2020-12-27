@@ -5,6 +5,18 @@ public class BombNumberDec extends Decor {
 	public String toString() {
 		return "Bomb number";
 	}
+
+	@Override
+	public boolean marcherdessus() {
+		
+		return false;
+	}
+
+	@Override
+	public boolean isRemovable() {
+		
+		return false;
+	}
 	
 
 }

@@ -15,11 +15,12 @@ import fr.ubx.poo.model.decor.Box;
 import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.model.decor.DoorNextClosed;
 import fr.ubx.poo.model.decor.Heart;
-import fr.ubx.poo.model.decor.Monster;
 import fr.ubx.poo.model.decor.Princess;
 import fr.ubx.poo.model.decor.Stone;
 import fr.ubx.poo.model.decor.Tree;
 import fr.ubx.poo.model.go.character.Player;
+import fr.ubx.poo.model.go.character.Bomb;
+import fr.ubx.poo.model.go.character.Monster;
 import fr.ubx.poo.view.image.ImageFactory;
 import javafx.scene.layout.Pane;
 
@@ -36,25 +37,22 @@ public final class SpriteFactory {
             return new SpriteDecor(layer, factory.get(BOX), position);
         if (decor instanceof DoorNextClosed)
             return new SpriteDecor(layer, factory.get(DOORNEXTCLOSED), position);
-        if (decor instanceof BombNumberDec)
-            return new SpriteDecor(layer, factory.get(BOMBNUMBERDEC), position);
-        if (decor instanceof BombNumberInc)
-            return new SpriteDecor(layer, factory.get(BOMBNUMBERINC), position);
-        if (decor instanceof BombRangeInc)
-            return new SpriteDecor(layer, factory.get(BOMBRANGEINC), position);
         if (decor instanceof Princess)
             return new SpriteDecor(layer, factory.get(PRINCESS), position);
-        if (decor instanceof Monster)
-            return new SpriteDecor(layer, factory.get(MONSTER), position);
-        if (decor instanceof BombRangeDec)
-            return new SpriteDecor(layer, factory.get(BOMBRANGEDEC), position);
         if (decor instanceof Heart)
             return new SpriteDecor(layer, factory.get(HEART), position);
-        return null;
+        	throw new RuntimeException("unsuported sprite for decor "+decor);
         
     }
 
     public static Sprite createPlayer(Pane layer, Player player) {
         return new SpritePlayer(layer, player);
     }
+    public static Sprite createMonster(Pane layer, Monster monster) {
+        return new SpriteMonster(layer, monster);
+    }
+    public static Sprite createBomb(Pane layer, Bomb bomb) {
+        return new SpriteBomb(layer, bomb);
+    }
+    
 }

@@ -5,4 +5,16 @@ public class Heart extends Decor{
 		return "coeur";
 	}
 
+	@Override
+	public boolean marcherdessus() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
+	public boolean isRemovable() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 }

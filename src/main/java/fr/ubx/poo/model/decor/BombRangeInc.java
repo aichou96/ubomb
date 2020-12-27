@@ -6,5 +6,17 @@ public class BombRangeInc extends Decor{
 	return "bombe renge";
 }
 
+	@Override
+	public boolean marcherdessus() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean isRemovable() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 
 }

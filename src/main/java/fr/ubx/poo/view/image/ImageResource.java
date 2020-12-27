@@ -29,8 +29,16 @@ public enum ImageResource {
     BOMBNUMBERINC("bonus_bomb_nb_inc.png"),
     BOMBERWOMAN("bomberwoman.png"),
     BOMBRANGEINC("bonus_bomb_range_inc.png"),
+    BOMB1("bomb1.png"),
+    BOMB2("bomb2.png"),
+    BOMB3("bomb3.png"),
+    BOMB4("bomb4.png"),
+    EXPLOSION("explosion.png"),
     PRINCESS("bomberwoman.png"),
-    MONSTER("monster_up.png"),
+    MONSTER_LEFT("monster_left.png"),
+    MONSTER_RIGHT("monster_right.png"),
+    MONSTER_UP("monster_up.png"),
+    MONSTER_DOWN("monster_down.png"),
     BOMBRANGEDEC("bonus_bomb_range_dec.png");
     ;
 

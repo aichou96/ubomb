@@ -45,18 +45,8 @@ public class WorldBuilder {
                 return new Box();
             case DoorNextClosed:
                 return new DoorNextClosed();
-            case BombNumberDec:
-                return new BombNumberDec();
-            case BombNumberInc:
-                return new BombNumberInc();
-            case BombRangeInc:
-                return new BombRangeInc();
             case Princess:
                 return new Princess();
-            case Monster:
-                return new Monster();
-            case BombRangeDec:
-                return new BombRangeDec();
             case Heart:
                 return new Heart();
             default:

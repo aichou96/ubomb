@@ -11,10 +11,19 @@ import static fr.ubx.poo.view.image.ImageResource.*;
 
 public final class ImageFactory {
     private final Image[] images;
+    
 
     private final ImageResource[] directions = new ImageResource[]{
             // Direction { N, E, S, W }
             PLAYER_UP, PLAYER_RIGHT, PLAYER_DOWN, PLAYER_LEFT,
+    };
+    
+    private final ImageResource[] direction1 = new ImageResource[]{
+            // Direction { N, E, S, W }
+            MONSTER_UP, MONSTER_RIGHT, MONSTER_DOWN, MONSTER_LEFT,
+    };
+    private final ImageResource[] bomb = new ImageResource[]{
+            BOMB4, BOMB3, BOMB2, BOMB1, EXPLOSION,
     };
 
     private final ImageResource[] digits = new ImageResource[]{
@@ -52,10 +61,21 @@ public final class ImageFactory {
             throw new IllegalArgumentException();
         return get(digits[i]);
     }
+    
 
     public Image getPlayer(Direction direction) {
         return get(directions[direction.ordinal()]);
     }
+    public Image getMonster(Direction direction) {
+        return get(direction1[direction.ordinal()]);
+    }
+    
+    public Image getNumBomb(int i) {
+        if (i < 0 || i > 5)
+            throw new IllegalArgumentException();
+        return get(bomb[i]);
+    }
+    
 
     /**
      * Holder
