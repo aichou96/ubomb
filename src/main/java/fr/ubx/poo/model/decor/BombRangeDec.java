@@ -8,13 +8,13 @@ public class BombRangeDec extends Decor {
 	@Override
 	public boolean marcherdessus() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isRemovable() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }

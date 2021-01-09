@@ -26,6 +26,8 @@ public enum ImageResource {
     BOX("box.png"),
     BOMBNUMBERDEC("bonus_bomb_nb_dec.png"),
     DOORNEXTCLOSED("door_closed.png"),
+    DOORNEXTOPENED("door_opened.png"),
+    DOORPREVOPENED("door_opened.png"),
     BOMBNUMBERINC("bonus_bomb_nb_inc.png"),
     BOMBERWOMAN("bomberwoman.png"),
     BOMBRANGEINC("bonus_bomb_range_inc.png"),

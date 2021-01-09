@@ -23,7 +23,7 @@ public class Monster extends GameObject implements Movable {
 	
 	public boolean canMove(Direction direction) {
 	   	Position nextPos = direction.nextPosition(getPosition());
-    	Position nextP2= direction.nextPosition(nextPos);
+    	
  	   Dimension d = game.getWorld().dimension;
  		if (!nextPos.inside(d))
  			return false;

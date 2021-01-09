@@ -26,14 +26,30 @@ public class Player extends GameObject implements Movable {
     private  boolean alive = true;
     Direction direction;
     private boolean moveRequested = false;
-    private  int lives = 3;
+    private  int lives = 1;
     private boolean winner;
     private boolean loseHert=false;
     boolean putbom;
     private long time;
+    private int nbKey=0;
+	private int nbBomb=3;
+
+	
+    public int getNbBomb() {
+		return nbBomb;
+	}
+	public void setNbBomb(int nbBomb) {
+		this.nbBomb = nbBomb;
+	}
+
+
  
 
     
+    public void setNbKey(int nbKey) {
+		this.nbKey = nbKey;
+	}
+	
 
 	public boolean isLoseHert() {
 		return loseHert;
@@ -67,53 +83,149 @@ public class Player extends GameObject implements Movable {
         }
         moveRequested = true;
     }
+    public int getKey() {
+        return nbKey;
+    }
+    public int getBomb() {
+        return nbBomb;
+    }
 
     @Override
     public boolean canMove(Direction direction) {
-        Position nextPos = direction.nextPosition(getPosition());
-        Position nextP2= direction.nextPosition(nextPos);
-        Dimension d = game.getWorld().dimension;
-      if (!nextPos.inside(d))
-      return false;
-      if(game.getWorld().get(nextPos)!=null) {
-      if (game.getWorld().get(nextPos).toString().equalsIgnoreCase("box")) {
-      if(nextP2.inside(d) && game.getWorld().isEmpty(nextP2) ) {
-      game.getWorld().setChanged(true);
-      return true;
-      }else {
-      return false;
-      }
-      }
-      }
-      if(game.getWorld().get(nextPos)!=null && game.getWorld().get(nextPos).toString().equalsIgnoreCase("heart") ) {
-      lives ++;
-      game.getWorld().setChanged(true);
-      return true;
-      }
-
-    return (game.getWorld().get(nextPos)==null || game.getWorld().get(nextPos).marcherdessus());
-     
-       }
+    Position nextPos = direction.nextPosition(getPosition());
+    Position nextP2= direction.nextPosition(nextPos);
+    Dimension d = game.getWorld().dimension;
+  if (!nextPos.inside(d))
+  return false;
+  if(game.getWorld().get(nextPos)!=null) {
+	  
+	  if (game.getWorld().get(nextPos).toString().equalsIgnoreCase("box")) {
+		  if(nextP2.inside(d) && game.getWorld().isEmpty(nextP2) ) {
+			  game.getWorld().setChanged(true);
+			  return true;
+		  }else {
+			  return false;
+		  }
+	  }
+  
+  }
+  if(game.getWorld().get(nextPos)!=null && game.getWorld().get(nextPos).toString().equalsIgnoreCase("heart") ) {
+   if(lives<3) {
+  lives ++;
+  game.getWorld().setChanged(true);}
+  return true;
+  }
+  if(game.getWorld().get(nextPos)!=null && game.getWorld().get(nextPos).toString().equalsIgnoreCase("princess") ) {
+      winner=true;
+	  return true;
+	  }
+  if(game.getWorld().get(nextPos)!=null && game.getWorld().get(nextPos).toString().equalsIgnoreCase("key") ) {
+  nbKey ++;
+  game.getWorld().setChanged(true);
+  return true;
+  }
+   if(game.getWorld().get(nextPos)!=null && 
+		  game.getWorld().get(nextPos).toString().equalsIgnoreCase("doornextclosed") && nbKey!=0) {
+	   game.getMapWorldStatus().put("key"+game.getNiveau()+1, game.getWorld());
+	   game.setNiveau(game.getNiveau()+1);
+  	 game.getWorld().setNextWorld(true);
+  	 return true;
+  	}
+	 if(game.getWorld().get(nextPos)!=null && game.getWorld().get(nextPos).toString().equalsIgnoreCase("doorprevopened")) {
+ 	  	
+ 	  	game.setNiveau(game.getNiveau()-1);
+ 	//  game.setWorld(game.getMapWorldStatus().get("key"+(game.getNiveau()-1)));
+ 	  	 game.getWorld().setPreviousWorld(true);	 
+ 	
+ 	 return true;
+	 }
+	 return (game.getWorld().get(nextPos)==null || game.getWorld().get(nextPos).marcherdessus());
  
-    
+   }
+
+    /*  public boolean canMove(Direction direction) {
+    	Position nextPos = direction.nextPosition(getPosition());
+    	Position nextP2= direction.nextPosition(nextPos);
+ 	   Dimension d = game.getWorld().dimension;
+ 		if (!nextPos.inside(d))
+ 			return false;
+ 		if(game.getWorld().get(nextPos)!=null) {
+ 			if (game.getWorld().get(nextPos).toString().equalsIgnoreCase("box")) {
+ 				if(nextP2.inside(d) && game.getWorld().isEmpty(nextP2) ) {
+ 					game.getWorld().setChanged(true);
+ 					return true;
+ 				}else {
+ 					return false;
+ 				}
+ 			}
+ 		}
+ 		if(game.getWorld().get(nextPos)!=null && game.getWorld().get(nextPos).toString().equalsIgnoreCase("heart") ) {
+ 			
+ 			lives ++;
+ 			game.getWorld().setChanged(true);
+ 			return true;
+ 		}
+ 		if(game.getWorld().get(nextPos)!=null && game.getWorld().get(nextPos).toString().equalsIgnoreCase("key") ) {
+ 			nbKey ++;
+ 			game.getWorld().setChanged(true);
+ 			return true;
+ 		}
+ 		if(game.getWorld().get(nextPos)!=null && 
+				  game.getWorld().get(nextPos).toString().equalsIgnoreCase("doornextclosed") && nbKey!=0) {
+			   //game.setNiveau(level);
+		  	  //level++;
+		  	 //game.getWorld().setNextWorld(true);
+			game.increaseLevel();
+			game.setNextChangeWorld(true);
+			
+		  	 return true;
+		  	}
+			 if(game.getWorld().get(nextPos)!=null && game.getWorld().get(nextPos).toString().equalsIgnoreCase("doorprevopened")) {
+		 	  	// level--;
+		 	  	//game.setNiveau(level-1);
+		 	  	// game.getWorld().setPreviousWorld(true);	
+				 game.decreaseLevel();
+				game.setPrevChangeWorld(true);
+				
+		 	
+		 	 return true;
+			 }
+
+
+		return (game.getWorld().get(nextPos)==null || game.getWorld().get(nextPos).canWalk());
+		
+ }*/
+
+
     public void doMove(Direction direction) {
-        Position nextPos = direction.nextPosition(getPosition());
-        Position nextP2= direction.nextPosition(nextPos);
-             Decor decor=game.getWorld().get(nextPos);
-             if(decor !=null && decor.toString().equalsIgnoreCase("box")) {
-             
-              game.getWorld().clear(nextPos);
-              game.getWorld().set(nextP2, decor);
-             
-             }
-             if( decor !=null && decor.toString().equalsIgnoreCase("heart")) {
-            game.getWorld().clear(nextPos);
-            //game.getWorld().set(nextP2, null);
-             }
-             setPosition(nextPos);
+    Position nextPos = direction.nextPosition(getPosition());
+    Position nextP2= direction.nextPosition(nextPos);
+         Decor decor=game.getWorld().get(nextPos);
+         if(decor !=null && decor.toString().equalsIgnoreCase("box")) {
+         
+          game.getWorld().clear(nextPos);
+          game.getWorld().set(nextP2, decor);
+         
+         }
+         if(decor !=null && decor.toString().equalsIgnoreCase("bombnumberdec")) {
+        	 nbBomb--;
+             game.getWorld().clear(nextPos);
+             game.getWorld().setChanged(true);
+         }
+         if(decor !=null && decor.toString().equalsIgnoreCase("bombnumberinc")) {
+        	 nbBomb++;
+             game.getWorld().clear(nextPos);
+             game.getWorld().setChanged(true);
+         }
+         if( decor !=null && decor.toString().equalsIgnoreCase("heart")) {
+        game.getWorld().clear(nextPos);
+         }
+         if( decor !=null && decor.toString().equalsIgnoreCase("key")) {
+         game.getWorld().clear(nextPos);
+         }
+         setPosition(nextPos);
 
-        }
-
+    }
 
     public void update(long now) {
         if (moveRequested) {
@@ -122,19 +234,14 @@ public class Player extends GameObject implements Movable {
             }
         }
       for(int i=0; i<game.getMonster().size();i++) {
-     if(now-time>=Math.pow(10,10) && getPosition().equals(game.getMonster().get(i).getPosition())) {
+    	  if(now-time>=Math.pow(10,10) && getPosition().equals(game.getMonster().get(i).getPosition())) {
           lives=lives-1;
           time=now;
-          }
+    	  }
       }
-       
-       
         moveRequested = false;
     }
-    public boolean getBomb() {
-    	
-    	return putbom;
-    }
+  
   public void setBomb(boolean v) {
     	
     	putbom=v;
@@ -145,6 +252,9 @@ public class Player extends GameObject implements Movable {
     }
 
     public boolean isAlive() {
+    	if(lives==0) {
+    		alive=false;
+    	}
         return alive;
     }
 

@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,46 +13,36 @@ import java.util.List;
 public class  WorldFile extends World {
 
 
+
 	
-	
-	/*public  Reader fichier() throws IOException {
-		Reader v = null;
-		BufferedReader in = null;
-	 try  {
-		    in = new BufferedReader(new FileReader(cheminfichier()));
-	     v=in;
-	    } catch (IOException ex) {
-	        System.err.println("Error loading configuration");
-	    }
-	 finally{
-		 in.close();
-		 }
-	 return v;
-	 }*/
+
 	
     public WorldFile(WorldEntity[][] raw) {
 		super(raw);
 		// TODO Auto-generated constructor stub
 	}
 
-	public static  WorldEntity[][] worldFromFile(String chemin) {
-    	
-    	WorldEntity[][] raw1=null;
-    	
+	public static  WorldEntity[][] worldFromFile(InputStream fichier) {
+		
+		WorldEntity[][] raw1=null;
     	BufferedReader in;
 		try {
-			in = new BufferedReader(new FileReader(chemin));
+			in = new BufferedReader(new InputStreamReader(fichier));
 			String line;
 	    	List<WorldEntity[]> list=new ArrayList<>();
+	    
+			
 			while ((line = in.readLine()) != null)
 			{
+				
 				WorldEntity[] we=new WorldEntity[line.length()];
 				for(int j=0; j<we.length; j++) {
 					we[j]=WorldEntity.fromCode(line.charAt(j));
 				}
 				list.add(we);
 			}
-			raw1=(WorldEntity[][]) list.toArray();
+			raw1=new WorldEntity[list.size()][];
+			list.toArray(raw1);
 			in.close();
 				
 		} catch ( IOException e) {

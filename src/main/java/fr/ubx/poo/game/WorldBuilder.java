@@ -7,7 +7,10 @@ import fr.ubx.poo.model.decor.BombRangeInc;
 import fr.ubx.poo.model.decor.Box;
 import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.model.decor.DoorNextClosed;
+import fr.ubx.poo.model.decor.DoorNextOpened;
+import fr.ubx.poo.model.decor.DoorPrevOpened;
 import fr.ubx.poo.model.decor.Heart;
+import fr.ubx.poo.model.decor.Key;
 import fr.ubx.poo.model.decor.Monster;
 import fr.ubx.poo.model.decor.Princess;
 import fr.ubx.poo.model.decor.Stone;
@@ -49,6 +52,20 @@ public class WorldBuilder {
                 return new Princess();
             case Heart:
                 return new Heart();
+            case Key:
+                return new Key();
+            case DoorPrevOpened:
+                return new DoorPrevOpened();
+                case DoorNextOpened:
+                return new DoorNextOpened();
+                case BombRangeInc:
+                return new BombRangeInc();
+                case BombRangeDec:
+                return new BombRangeDec();
+                case  BombNumberInc:
+                return new  BombNumberInc();
+                case BombNumberDec:
+                return new BombNumberDec();
             default:
                 return null;
         }

@@ -12,6 +12,7 @@ public class Bomb extends GameObject {
 	public long time;
 	private int j=0;
 	private long timeinvisible;
+	private int porte;
 	
 	
 
@@ -77,11 +78,16 @@ public class Bomb extends GameObject {
 			if(numBomb<4) {
 				numBomb++;
 			}
+			
 			else if(numBomb==4) {
 				game.getWorld().setChanged(true);
 			}
 			time=now;
+			
+			
 		}
+		/*else {
+		time=time+ System.nanoTime();}*/
 
 	}
 

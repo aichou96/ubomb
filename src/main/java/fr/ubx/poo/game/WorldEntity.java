@@ -37,20 +37,14 @@ public enum WorldEntity {
         this.code = code;
     }
 
-    /*public static Optional<WorldEntity> fromCode(char code) {
-    	
-        return Arrays.stream(values())
-                .filter(e->e.acceptCode(code))
-                .findFirst();
-    }*/
-    
     public static WorldEntity fromCode(char code) {
         Optional<WorldEntity>v= Arrays.stream(values())
                 .filter(e->e.acceptCode(code))
                 .findFirst();
+        
         return v.get();
     }
-
+  
 
     private boolean acceptCode(char code) {
         return this.code == code;

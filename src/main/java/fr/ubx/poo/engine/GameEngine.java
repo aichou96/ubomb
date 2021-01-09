@@ -27,6 +27,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 
 public final class GameEngine {
@@ -35,21 +36,23 @@ public final class GameEngine {
 	private final String windowTitle;
 	private final Game game;
 	private final Player player;
-	private final List<Sprite> sprites = new ArrayList<>();
-	private List<Bomb> bomb1=new ArrayList<>() ;
-	private List<Sprite> spriteBomb1=new ArrayList<>();
+	// TODO essayer de mettre ces bombes ligne dans une autre classe
+	
+	//créer des map pour ces sprites
+	private Map<Integer ,List<Sprite>> sprites = new HashMap<>();
+	private Map<Integer ,List<Sprite>> spriteBomb = new HashMap<>();
 	private List<Sprite> spriteMonsters = new ArrayList<>();
-	  private List< Monster> monsters= new ArrayList<>();
+	
+	// TODO essayer de déplacer ces monstres  dans une autre classe
+	private List< Monster> monsters= new ArrayList<>();
+	
 	private StatusBar statusBar;
 	private Pane layer;
 	private Input input;
 	private Stage stage;
 	private Sprite spritePlayer;
-	private Sprite spriteExplos;
-	private  Bomb bomb;
 	boolean vf=false;
-	private boolean loseHert=false;
-	private int numberBomb=3;
+
 
 
 
@@ -57,40 +60,50 @@ public final class GameEngine {
 		this.windowTitle = windowTitle;
 		this.game = game;
 		this.player = game.getPlayer();
-		this.monsters=game.getMonster();
 		initialize(stage, game);
 		buildAndSetGameLoop();
 	}
 
 	public void controlExplosion(Bomb b) {
-	    Position p= b.getPosition();
-	Direction n=Direction.N;
-	Direction s=Direction.S;
-	Direction w=Direction.W;
-	Direction e=Direction.E;
-	Position p1=n.nextPosition(p);
-	Position p2=s.nextPosition(p);
-	Position p3=w.nextPosition(p);
-	Position p4=e.nextPosition(p);
-	
+		
+		for (int i = 0; i < game.getListWorld().size(); i++) {
+			System.out.println("oui10");
+			if(game.getListWorld().get(i).getBombput().size()!=0) {
+				Position p= b.getPosition();
+				Direction n=Direction.N;
+				Direction s=Direction.S;
+				Direction w=Direction.W;
+				Direction e=Direction.E;
+				Position p1=n.nextPosition(p);
+				Position p2=s.nextPosition(p);
+				Position p3=w.nextPosition(p);
+				Position p4=e.nextPosition(p);
+				
 
-	Bomb up=new Bomb(game,p1);
-	up.numBomb=4;
-	spriteBomb1.add(SpriteFactory.createBomb(layer, up));
+				Bomb up=new Bomb(game,p1);
+				up.numBomb=4;
+				
+				spriteBomb.get(i).add(SpriteFactory.createBomb(layer, up));
 
-	Bomb rigth =new Bomb(game,p2);
-	rigth.numBomb=4;
-	spriteBomb1.add(SpriteFactory.createBomb(layer, rigth));
+				Bomb rigth =new Bomb(game,p2);
+				rigth.numBomb=4;
+				spriteBomb.get(i).add(SpriteFactory.createBomb(layer, rigth));
 
 
-	Bomb left=new Bomb(game,p3);
-	left.numBomb=4;
-	spriteBomb1.add(SpriteFactory.createBomb(layer, left));
+				Bomb left=new Bomb(game,p3);
+				left.numBomb=4;
+				spriteBomb.get(i).add(SpriteFactory.createBomb(layer, left));
 
-	Bomb down=new Bomb(game,p4);
-	down.numBomb=4;
-	spriteBomb1.add(SpriteFactory.createBomb(layer, down));
-	    }
+				Bomb down=new Bomb(game,p4);
+				down.numBomb=4;
+				spriteBomb.get(i).add(SpriteFactory.createBomb(layer, down));
+
+				
+				
+			}
+		}
+		
+		    }
 	
 
 	private void initialize(Stage stage, Game game) {
@@ -114,14 +127,38 @@ public final class GameEngine {
 		root.getChildren().add(layer); 
 		statusBar = new StatusBar(root, sceneWidth, sceneHeight, game);
 		// Create decor sprites
-		game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
+		// pour chaque monde on cree les sprites decor correspondant
+		
+		for (int i = 0; i < game.getListWorld().size(); i++) {
+			final List<Sprite> s=new ArrayList<>();
+			game.getListWorld().get(i).forEach( (pos,d) -> s.add(SpriteFactory.createDecor(layer, pos, d)));
+			sprites.put(i, s);
+			System.out.println("oui9");
+		}
+		
+		
 		spritePlayer = SpriteFactory.createPlayer(layer, player);  
-		for(int i=0;i<bomb1.size();i++) {
-			spriteBomb1.add(SpriteFactory.createBomb(layer, bomb1.get(i)));
+		
+		
+		
+		for (int i = 0; i < game.getListWorld().size(); i++) {
+			 List<Sprite> s=new ArrayList<>();
+			 System.out.println("oui8");
+			 
+			for (int j = 0; j < game.getListWorld().get(i).getBombput().size(); j++) {
+				s.add(SpriteFactory.createBomb(layer, game.getListWorld().get(i).getBombput().get(j)));
+				System.out.println("oui7");
+			}
+			
+			spriteBomb.put(i, s);
 		}
+		
+		monsters=game.getMonster();
 		for(int i=0;i<monsters.size();i++) {
-			spriteMonsters.add(SpriteFactory.createMonster(layer, monsters.get(i)));
+	     spriteMonsters.add(SpriteFactory.createMonster(layer, monsters.get(i)));
+           System.out.println("oui6");
 		}
+		
 		
 
 	}
@@ -142,7 +179,7 @@ public final class GameEngine {
 		};
 	}
 
-	private void processInput(long now) {
+	private void processInput(long now) { 
 		if (input.isExit()) {
 			gameLoop.stop();
 			Platform.exit();
@@ -188,77 +225,97 @@ public final class GameEngine {
 	}
 
 	private void update(long now) {
-		if(vf && numberBomb!=0) {
+		if(vf && game.getPlayer().getNbBomb()!=0) {
 	        Bomb b=new Bomb(game, player.getPosition());
-	        bomb1.add(b);
-	        spriteBomb1.add(SpriteFactory.createBomb(layer,b));
-	        numberBomb--;
+	        game.getWorld().getBombput().add(b);
+	        spriteBomb.get(game.getNiveau()).add(SpriteFactory.createBomb(layer,b));
+	        game.getPlayer().setNbBomb(game.getPlayer().getNbBomb()-1);
 	        vf=false;
 	        }
-		
-	    if(game.getWorld().hasChanged()){
-	    sprites.forEach(Sprite::remove);
-	    sprites.clear();
-	    spriteBomb1.forEach(Sprite::remove);
-	    spriteBomb1.clear();
-	    Iterator<Bomb> it = bomb1.iterator();
-	    while(it.hasNext()) {
-	    Bomb b = it.next();
-	    if(b.numBomb==4) {
-	    numberBomb++;
-	    it.remove();
+		for (int i = 0; i < game.getListWorld().size(); i++) {
+			System.out.println("oui5");
+			if(game.getListWorld().get(i).hasChanged() ){
+		    		sprites.get(i).forEach(Sprite::remove);
+		    		sprites.get(i).clear();
+				
+		    		spriteBomb.get(i).forEach(Sprite::remove);
+		    		spriteBomb.get(i).clear();
+				
+		    		
+		    Iterator<Bomb> it = game.getListWorld().get(i).getBombput().iterator();
+		    while(it.hasNext()) {
+		    Bomb b = it.next();
+		    if(b.numBomb==4) {
+		    	game.getPlayer().setNbBomb(game.getPlayer().getNbBomb()+1);
+		    it.remove();
+		    System.out.println("oui4");
+		    }
+		   
+		    }
+		    initialize(stage,game);
+		    game.getListWorld().get(i).setChanged(false);
+		    }
+		}
+	    
+	    
+		if(game.getWorld().isNextWorld()) {
+	    	game.getWorld().setNextWorld(false);
+	   	game.newPositon();
+	    	game.getPlayer().setNbKey(0);
+	    	stage.close();
+	    	initialize(stage,game);
+	
 	    }
-	   
+	    if(game.getWorld().isPreviousWorld()) {
+	    	game.getWorld().setPreviousWorld(false);
+	    	game.newPositon1();
+	    	game.getPlayer().setNbKey(1);
+	    	stage.close();
+	    	initialize(stage,game);
 	    }
-	    initialize(stage,game);
-	    game.getWorld().setChanged(false);
-	    }
-	        boolean in=false ;
-	        for(int i=0; i<bomb1.size();i++) {
-	        bomb1.get(i).update(now);
-	        if(bomb1.get(i).numBomb==4) {
-	        	in=true;
-	        	bomb1.get(i).remove();
-	        	int j=0;
-	        	sprites.forEach(Sprite::remove);
-				sprites.clear();
-				initialize(stage,game);
-	        controlExplosion(bomb1.get(i));
-	        }
-	        }
+	    /*if(game.getNextChangeWorld()) {
+    	   game.newPositon();
+	    	game.getPlayer().setNbKey(0);
+	    	stage.close();
+	    	initialize(stage,game);
+	    	game.setNextChangeWorld(false);
+       }
+       if(game.getPrevChangeWorld()) {
+    	   game.newPositon1();
+	    	game.getPlayer().setNbKey(1);
+	    	stage.close();
+	    	initialize(stage,game);
+	    	game.setPrevChangeWorld(false);
+       }
+*/
+	    
+	    /*c'est ici qui bloque le monde*/
+	    for (int j = 0; j < game.getListWorld().size(); j++) {
+	    //	render();
+	    	 for(int i=0; i<game.getListWorld().get(j).getBombput().size();i++) {
+	    		 System.out.println("oui2");
+	    		 game.getListWorld().get(j).getBombput().get(i).update(now);
+	    		 
+	 	        if(game.getListWorld().get(j).getBombput().get(i).numBomb==4) {
+	 	        	game.getListWorld().get(j).getBombput().get(i).remove();
+	 		    		sprites.get(j).forEach(Sprite::remove);
+	 		    		sprites.get(j).clear();
+	 		    		//initialize(stage,game);
+	 	        controlExplosion(game.getListWorld().get(j).getBombput().get(i));
+	 	       
+	 	        }
+	 	        
+	 	        }
+		}
 	       
-	        /*if(in) {
-	        	long debut=	System.currentTimeMillis();
-	        	double i=1;
-	        	boolean v=false;
-	        	while(System.currentTimeMillis()-debut<4*Math.pow(10, 3)) {
-	        		if(v) {
-	        			if(i%2!=0) {
-	    	        		spritePlayer.remove();
-	    	        		}
-	    	        		else {
-	    	        			//spritePlayer = SpriteFactory.createPlayer(layer, player); 
-	    	        		}
-	        			
-	        			//initialize(stage,game);
-	        			v=false;
-	        		}
-	        		
-	        		if((System.currentTimeMillis()-debut)%(0.5*Math.pow(10, 3))==0) {
-	        		v=true;
-	        		i++;
-	        		
-	        		}
-	        		
-	        	}
-	        	in=false;
-	        	
-	        }*/
+	       
 	        
 	        player.update(now);
 	        for(int i=0; i<monsters.size();i++) {
+	        	System.out.println("oui3");
 	        monsters.get(i).update(now);
 	        }
+	        
 
 	        if (player.isAlive() == false) {
 	            gameLoop.stop();
@@ -268,15 +325,14 @@ public final class GameEngine {
 	            gameLoop.stop();
 	             showMessage("Gagné", Color.BLUE);
 	        }
-
-	       
 	    }
 
 
     private void render() {
    
-    spriteBomb1.forEach(Sprite::render);
-        sprites.forEach(Sprite::render);
+    	
+    spriteBomb.get(game.getNiveau()).forEach(Sprite::render);
+        sprites.get(game.getNiveau()).forEach(Sprite::render);
         // last rendering to have player in the foreground
         spriteMonsters.forEach(Sprite::render);
         spritePlayer.render();

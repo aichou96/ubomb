@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 import fr.ubx.poo.model.decor.Decor;
+import fr.ubx.poo.model.go.character.Bomb;
 
 public class World {
     private final Map<Position, Decor> grid;
@@ -18,8 +19,37 @@ public class World {
     public final Dimension dimension;
     private boolean changed = false;
     private boolean changeBomb=false;
+    private boolean nextWorld=false;
+    private boolean previousWorld=false;
+    private List<Bomb> bombput=new ArrayList<>() ;
 
  
+
+	
+
+	public List<Bomb> getBombput() {
+		return bombput;
+	}
+
+	public void setBombput(List<Bomb> bombput) {
+		this.bombput = bombput;
+	}
+
+	public boolean isNextWorld() {
+		return nextWorld;
+	}
+
+	public void setNextWorld(boolean nextWorld) {
+		this.nextWorld = nextWorld;
+	}
+
+	public boolean isPreviousWorld() {
+		return previousWorld;
+	}
+
+	public void setPreviousWorld(boolean previousWorld) {
+		this.previousWorld = previousWorld;
+	}
 
 	public World(WorldEntity[][] raw) {
         this.raw = raw;
@@ -38,6 +68,28 @@ public class World {
         throw new PositionNotFoundException("Player");
     }
     
+    public Position findDoorPrevOpened() throws PositionNotFoundException {
+        for (int x = 0; x < dimension.width; x++) {
+            for (int y = 0; y < dimension.height; y++) {
+                if (raw[y][x] == WorldEntity.DoorPrevOpened) {
+                    return new Position(x, y);
+                }
+            }
+        }
+        throw new PositionNotFoundException("DoorPrevOpened");
+    }
+    public Position findDoorNextClosed() throws PositionNotFoundException {
+        for (int x = 0; x < dimension.width; x++) {
+            for (int y = 0; y < dimension.height; y++) {
+                if (raw[y][x] == WorldEntity.DoorNextClosed) {
+                    return new Position(x, y);
+                }
+            }
+        }
+        throw new PositionNotFoundException("DoorNextClosed");
+    }
+    
+    
     public List<Position> findMonsters() throws PositionNotFoundException {
     	List<Position> l = new ArrayList<>();
         for (int x = 0; x < dimension.width; x++) {
@@ -54,12 +106,8 @@ public class World {
             }
             return l;
         }
-
-
-
     
-    
-
+  
     public Decor get(Position position) {
         return grid.get(position);
     }

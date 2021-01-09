@@ -1,7 +1,11 @@
 package fr.ubx.poo.model.decor;
 
-public class Key extends Decor{
+public class DoorNextOpened extends Decor {
 
+	@Override
+	public String toString() {
+	return "doornextopened";
+}
 	@Override
 	public boolean marcherdessus() {
 		// TODO Auto-generated method stub
@@ -11,11 +15,7 @@ public class Key extends Decor{
 	@Override
 	public boolean isRemovable() {
 		// TODO Auto-generated method stub
-		return true;
+		return false;
 	}
 
-	@Override
-    public String toString() {
-        return "Key";
-    }
 }

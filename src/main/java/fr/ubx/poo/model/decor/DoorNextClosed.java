@@ -3,13 +3,13 @@ package fr.ubx.poo.model.decor;
 public class DoorNextClosed extends Decor {
 	@Override
 	public String toString() {
-		return "door closed";
+		return "doornextclosed";
 	}
 
 	@Override
 	public boolean marcherdessus() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override

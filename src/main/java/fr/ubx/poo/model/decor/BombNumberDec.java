@@ -3,19 +3,19 @@ package fr.ubx.poo.model.decor;
 public class BombNumberDec extends Decor {
 	@Override
 	public String toString() {
-		return "Bomb number";
+		return "bombnumberdec";
 	}
 
 	@Override
 	public boolean marcherdessus() {
 		
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean isRemovable() {
 		
-		return false;
+		return true;
 	}
 	
 
